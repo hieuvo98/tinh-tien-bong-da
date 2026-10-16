@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -78,7 +77,7 @@ footer { color: var(--muted); font-size: 11px; text-align: center; padding-top: 
     <section class="panel" aria-label="Thông tin trận đấu">
       <div class="field">
         <label for="cost">Tổng tiền sân</label>
-        <div class="input-wrap"><input id="cost" type="number" inputmode="numeric" min="1" step="1" value="0" autocomplete="off"><span class="suffix">k</span></div>
+        <div class="input-wrap"><input id="cost" type="number" inputmode="numeric" min="1" step="1" placeholder="Nhập tiền sân" autocomplete="off"><span class="suffix">k</span></div>
       </div>
       <div class="field">
         <div class="people-grid">
@@ -93,27 +92,24 @@ footer { color: var(--muted); font-size: 11px; text-align: center; padding-top: 
         </div>
       </div>
       <div class="field">
-        <label for="diff">Chênh lệch tối đa mỗi người</label>
-        <div class="diff-row"><input id="diff" type="number" inputmode="numeric" min="0" max="12" step="1" value="12"><span class="suffix" style="position:static;transform:none;white-space:nowrap;">k/người</span></div>
-        <div class="presets" aria-label="Mức chênh lệch nhanh">
-          <button type="button" class="preset" data-diff="5">5k</button>
-          <button type="button" class="preset" data-diff="8">8k</button>
-          <button type="button" class="preset" data-diff="10">10k</button>
-          <button type="button" class="preset active" data-diff="12">12k</button>
+        <label>Mức chênh lệch mỗi người (k)</label>
+        <div class="people-grid">
+          <div><label for="minDiff">Tối thiểu</label><input id="minDiff" type="number" inputmode="numeric" min="0" max="100" step="1" value="10"></div>
+          <div><label for="maxDiff">Tối đa</label><input id="maxDiff" type="number" inputmode="numeric" min="0" max="100" step="1" value="14"></div>
         </div>
       </div>
     </section>
     <section class="result" aria-live="polite" aria-label="Kết quả chia tiền">
-      <div class="result-heading"><h2>Kết quả chia tiền</h2><span class="pill" id="totalPill">Tổng 600k</span></div>
+      <div class="result-heading"><h2>Kết quả chia tiền</h2><span class="pill" id="totalPill">Nhập tiền sân</span></div>
       <div class="fees">
-        <div class="fee-card"><div class="fee-label">🟢 Mỗi người đội thắng</div><div class="fee-amount" id="winFee">39k</div><div class="fee-detail" id="winDetail">8 người · tổng 312k</div></div>
-        <div class="fee-card"><div class="fee-label">🔴 Mỗi người đội thua</div><div class="fee-amount" id="loseFee">48k</div><div class="fee-detail" id="loseDetail">6 người · tổng 288k</div></div>
+        <div class="fee-card"><div class="fee-label">🟢 Mỗi người đội thắng</div><div class="fee-amount" id="winFee">—</div><div class="fee-detail" id="winDetail">Nhập tiền sân để tính</div></div>
+        <div class="fee-card"><div class="fee-label">🔴 Mỗi người đội thua</div><div class="fee-amount" id="loseFee">—</div><div class="fee-detail" id="loseDetail">Nhập tiền sân để tính</div></div>
       </div>
-      <p class="math-note" id="mathNote">Chênh lệch thực tế 9k/người. Tổng tiền thu khớp tiền sân và chênh lệch không vượt quá 12k.</p>
+      <p class="math-note" id="mathNote">Nhập tổng tiền sân để xem kết quả.</p>
     </section>
     <div class="warning" id="warning" role="status"></div>
     <div class="actions"><button class="primary" id="copyBtn" type="button">Sao chép kết quả</button><button class="secondary" id="resetBtn" type="button">Đặt lại</button></div>
-    <p class="tip">Công cụ tự làm tròn tiền mỗi người theo đơn vị 1k, sao cho tổng tiền thu không thấp hơn tiền sân, tiền dư ít nhất có thể và chênh lệch không vượt quá mức tối đa bạn đặt.</p>
+    <p class="tip">Công cụ tự làm tròn tiền mỗi người theo đơn vị 1k, sao cho tổng tiền thu không thấp hơn tiền sân, tiền dư ít nhất có thể và chênh lệch nằm trong khoảng tối thiểu–tối đa bạn đặt.</p>
     <footer>Chạy trực tiếp trên trình duyệt · Không cần đăng nhập · Không lưu dữ liệu trận đấu</footer>
   </div>
 </main>
@@ -123,7 +119,8 @@ footer { color: var(--muted); font-size: 11px; text-align: center; padding-top: 
   const costInput = $('cost');
   const winnersInput = $('winners');
   const losersInput = $('losers');
-  const diffInput = $('diff');
+  const minDiffInput = $('minDiff');
+  const maxDiffInput = $('maxDiff');
   const warning = $('warning');
   const format = (n) => Math.round(n).toLocaleString('vi-VN') + 'k';
   const parseCost = () => Math.floor(Number(costInput.value)) || 0;
@@ -132,12 +129,12 @@ footer { color: var(--muted); font-size: 11px; text-align: center; padding-top: 
     const cost = parseCost();
     const nw = Math.floor(Number(winnersInput.value));
     const nl = Math.floor(Number(losersInput.value));
-    const maxDiff = Math.floor(Number(diffInput.value));
-    document.querySelectorAll('[data-diff]').forEach(b => b.classList.toggle('active', Number(b.dataset.diff) === maxDiff));
+    const minDiff = Math.floor(Number(minDiffInput.value));
+    const maxDiff = Math.floor(Number(maxDiffInput.value));
     warning.classList.remove('show');
     warning.textContent = '';
-    if (!cost || !Number.isFinite(cost) || !Number.isFinite(nw) || !Number.isFinite(nl) || nw < 1 || nl < 1 || nw > 99 || nl > 99 || !Number.isFinite(maxDiff) || maxDiff < 0 || maxDiff > 12) {
-      warning.textContent = 'Vui lòng nhập tiền sân hợp lệ, số người mỗi đội từ 1 đến 99 và mức chênh lệch tối đa từ 0k đến 12k.';
+    if (!cost || !Number.isFinite(cost) || !Number.isFinite(nw) || !Number.isFinite(nl) || nw < 1 || nl < 1 || nw > 99 || nl > 99 || !Number.isFinite(minDiff) || !Number.isFinite(maxDiff) || minDiff < 0 || maxDiff < minDiff || maxDiff > 100) {
+      warning.textContent = 'Vui lòng nhập tổng tiền sân hợp lệ, số người mỗi đội từ 1 đến 99 và mức chênh lệch hợp lệ (tối thiểu không vượt quá tối đa, tối đa không quá 100k).';
       warning.classList.add('show');
       $('winFee').textContent = '—'; $('loseFee').textContent = '—';
       $('winDetail').textContent = 'Kiểm tra lại dữ liệu'; $('loseDetail').textContent = 'Kiểm tra lại dữ liệu';
@@ -145,7 +142,7 @@ footer { color: var(--muted); font-size: 11px; text-align: center; padding-top: 
       return null;
     }
     let best = null;
-    for (let d = 0; d <= maxDiff; d++) {
+    for (let d = minDiff; d <= maxDiff; d++) {
       const w = Math.max(0, Math.ceil((cost - nl * d) / (nw + nl)));
       const l = w + d;
       const collected = nw * w + nl * l;
@@ -162,18 +159,17 @@ footer { color: var(--muted); font-size: 11px; text-align: center; padding-top: 
     $('winDetail').textContent = `${nw} người · tổng ${format(wt)}`;
     $('loseDetail').textContent = `${nl} người · tổng ${format(lt)}`;
     $('totalPill').textContent = `Tổng ${format(cost)}`;
-    $('mathNote').textContent = `Chênh lệch thực tế ${format(diff)}/người (tối đa ${format(maxDiff)}). Tổng thu ${format(best.collected)}, dư ${format(best.surplus)}.`;
+    $('mathNote').textContent = `Chênh lệch thực tế ${format(diff)}/người (cho phép ${format(minDiff)}–${format(maxDiff)}). Tổng thu ${format(best.collected)}, dư ${format(best.surplus)}.`;
     return {cost, nw, nl, diff, winFee, loseFee, wt, lt, collected: best.collected, surplus: best.surplus};
   }
   costInput.addEventListener('input', calculate);
-  [winnersInput, losersInput, diffInput].forEach(el => el.addEventListener('input', calculate));
+  [winnersInput, losersInput, minDiffInput, maxDiffInput].forEach(el => el.addEventListener('input', calculate));
   document.querySelectorAll('[data-step]').forEach(btn => btn.addEventListener('click', () => {
     const input = $(btn.dataset.step);
     const current = Number(input.value) || 1;
     input.value = Math.min(99, Math.max(1, current + Number(btn.dataset.delta)));
     calculate();
   }));
-  document.querySelectorAll('[data-diff]').forEach(btn => btn.addEventListener('click', () => { diffInput.value = btn.dataset.diff; calculate(); }));
   $('copyBtn').addEventListener('click', async () => {
     const r = calculate();
     if (!r) return;
@@ -187,7 +183,7 @@ footer { color: var(--muted); font-size: 11px; text-align: center; padding-top: 
     }
     setTimeout(() => btn.textContent = 'Sao chép kết quả', 1800);
   });
-  $('resetBtn').addEventListener('click', () => { costInput.value = '600'; winnersInput.value = 8; losersInput.value = 6; diffInput.value = 12; calculate(); });
+  $('resetBtn').addEventListener('click', () => { costInput.value = ''; winnersInput.value = 5; losersInput.value = 5; minDiffInput.value = 10; maxDiffInput.value = 14; calculate(); });
   calculate();
 })();
 </script>
