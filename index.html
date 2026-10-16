@@ -170,7 +170,7 @@ footer { color: var(--muted); font-size: 11px; text-align: center; padding-top: 
     $('loseFee').textContent = format(loseFee);
     $('winDetail').textContent = `${nw} người · tổng ${format(wt)}`;
     $('loseDetail').textContent = `${nl} người · tổng ${format(lt)}`;
-    $('totalPill').textContent = `Tổng thu ${format(best.collected)}, dư ${format(best.surplus)}.`;
+    $('totalPill').textContent = `Tổng thu ${format(best.collected)}, dư ${format(best.surplus)}`;
     $('mathNote').textContent = `Chênh lệch thực tế ${format(diff)}/người (cho phép ${format(minDiff)}–${format(maxDiff)}).`;
     return {cost, nw, nl, diff, winFee, loseFee, wt, lt, collected: best.collected, surplus: best.surplus};
   }
