@@ -78,17 +78,17 @@ footer { color: var(--muted); font-size: 11px; text-align: center; padding-top: 
     <section class="panel" aria-label="Thông tin trận đấu">
       <div class="field">
         <label for="cost">Tổng tiền sân</label>
-        <div class="input-wrap"><input id="cost" type="number" inputmode="numeric" min="1" step="1" value="600" autocomplete="off"><span class="suffix">k</span></div>
+        <div class="input-wrap"><input id="cost" type="number" inputmode="numeric" min="1" step="1" value="0" autocomplete="off"><span class="suffix">k</span></div>
       </div>
       <div class="field">
         <div class="people-grid">
           <div>
             <label for="winners">Số người đội thắng</label>
-            <div class="counter"><button type="button" data-step="winners" data-delta="-1" aria-label="Giảm số người đội thắng">−</button><input id="winners" type="number" inputmode="numeric" min="1" max="99" value="8"><button type="button" data-step="winners" data-delta="1" aria-label="Tăng số người đội thắng">+</button></div>
+            <div class="counter"><button type="button" data-step="winners" data-delta="-1" aria-label="Giảm số người đội thắng">−</button><input id="winners" type="number" inputmode="numeric" min="1" max="99" value="5"><button type="button" data-step="winners" data-delta="1" aria-label="Tăng số người đội thắng">+</button></div>
           </div>
           <div>
             <label for="losers">Số người đội thua</label>
-            <div class="counter"><button type="button" data-step="losers" data-delta="-1" aria-label="Giảm số người đội thua">−</button><input id="losers" type="number" inputmode="numeric" min="1" max="99" value="6"><button type="button" data-step="losers" data-delta="1" aria-label="Tăng số người đội thua">+</button></div>
+            <div class="counter"><button type="button" data-step="losers" data-delta="-1" aria-label="Giảm số người đội thua">−</button><input id="losers" type="number" inputmode="numeric" min="1" max="99" value="5"><button type="button" data-step="losers" data-delta="1" aria-label="Tăng số người đội thua">+</button></div>
           </div>
         </div>
       </div>
