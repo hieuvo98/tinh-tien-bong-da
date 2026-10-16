@@ -70,9 +70,8 @@ footer { color: var(--muted); font-size: 11px; text-align: center; padding-top: 
 <main class="app">
   <div class="wrap">
     <header>
-      <div class="eyebrow">⚽ Công cụ cho admin</div>
-      <h1>Tính tiền bóng đá</h1>
-      <p class="subtitle">Nhập tiền sân và số người mỗi đội. Đội thua đóng nhiều hơn theo mức chênh lệch cố định.</p>
+      <div class="eyebrow">⚽ Công cụ tính tiền đá banh</div>
+      <!--<h1>Tính tiền đá banh</h1>-->
     </header>
     <section class="panel" aria-label="Thông tin trận đấu">
       <div class="field">
@@ -113,6 +112,7 @@ footer { color: var(--muted); font-size: 11px; text-align: center; padding-top: 
         </div>
       </div>
     </section>
+    <div class="actions"><button class="primary" id="copyBtn" type="button">Sao chép kết quả</button><button class="secondary" id="resetBtn" type="button">Đặt lại</button></div>
     <section class="result" aria-live="polite" aria-label="Kết quả chia tiền">
       <div class="result-heading"><h2>Kết quả chia tiền</h2><span class="pill" id="totalPill">Nhập tiền sân</span></div>
       <div class="fees">
@@ -122,8 +122,7 @@ footer { color: var(--muted); font-size: 11px; text-align: center; padding-top: 
       <p class="math-note" id="mathNote">Nhập tổng tiền sân để xem kết quả.</p>
     </section>
     <div class="warning" id="warning" role="status"></div>
-    <div class="actions"><button class="primary" id="copyBtn" type="button">Sao chép kết quả</button><button class="secondary" id="resetBtn" type="button">Đặt lại</button></div>
-    <footer>hieuvv.qni@vnpt.vn</footer>
+    <footer>©Author: hieuvv.qni@vnpt.vn</footer>
   </div>
 </main>
 <script>
